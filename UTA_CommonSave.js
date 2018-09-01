@@ -1,8 +1,8 @@
 //=============================================================================
 // UTA_CommonSave.js
 //=============================================================================
-// Version    : 1.02
-// LastUpdate : 2016.02.17
+// Version    : 1.20
+// LastUpdate : 2016.05.11
 // Author     : T.Akatsuki
 // Website    : http://utakata-no-yume.net/
 // License    : MIT License(http://opensource.org/licenses/mit-license.php)
@@ -16,13 +16,15 @@
  * @param Target Switches
  * @desc Set target switch index number.
  * If you want to set multiple, put comma between indexes.
- * (ex) 11,12,13
+ * Using "-", the range can be specified.
+ * (ex) 1-3,11,12,13,20,21
  * @default 
  * 
  * @param Target Variables
  * @desc Set target variable index number.
  * If you want to set multiple, put comma between indexes.
- * (ex) 1,2,3,4,5
+ * Using "-", the range can be specified.
+ * (ex) 1-5,11,12,13,23,24
  * @default 
  * 
  * @param Is Auto
@@ -52,12 +54,16 @@
  *   Target Switches [Switch No, ...]
  *     Set target switch index number.
  *     If you want to set multiple, put comma between indexes.
- *     (Ex) 11,12,13,20,21
+ *     Using "-", the range can be specified.
+ *     (Ex) 1-3,11,12,13,20,21
+ *            => number 1,2,3,11,12,13,20,21 switches are target.
  * 
  *   Target Variables [Valiable No, ...]
  *     Set target variable index number.
  *     If you want to set multiple, put comma between indexes.
- *     (Ex) 11,12,13,14,15
+ *     Using "-", the range can be specified.
+ *     (Ex) 1-3,11,12,13,14,15
+ *            => number 1,2,3,11,12,13,14,15 variables are target.
  * 
  *   Is Auto [true|false]
  *     Automatically to set save / load common save data on save / load timing.
@@ -69,13 +75,22 @@
  *     Set whether the issue a trace for debugging.
  * 
  * # Plugin Command
- *   CommonSave load     # Read GameSwitches and GameVariables from common save data and apply game data.
- *                       # This command is used when you want to load common save data at any time.
- *   CommonSave save     # Save target GameSwitches and GameVariables common save data.
- *                       # This command is used when you want to save in common save data at any time.
- *   CommonSave remove   # Remove common save data file.
+ *   CommonSave load                  # Read GameSwitches and GameVariables from common save data and apply game data.
+ *                                    # This command is used when you want to load common save data at any time.
+ *   CommonSave save                  # Save target GameSwitches and GameVariables common save data.
+ *                                    # This command is used when you want to save in common save data at any time.
+ *   CommonSave remove                # Remove common save data file.
+ * 
+ *   CommonSave setTrace [true|false] # Setting to enabled trace on console.
+ * 
+ *   CommonSave check                 # Show sharing target switches and variables to console.
  * 
  * # Change Log
+ *   ver 1.20 (2016.05.11)
+ *     Using "-", the range can be specified.
+ *     Add setTrace plugin command.
+ *     Add check plugin command.
+ * 
  *   ver 1.10 (Fed 17, 2016)
  *     Rename to UTA_CommonSave.js.
  *     To be able to set trace in the parameter.
@@ -96,14 +111,14 @@
  * 
  * @param Target Switches
  * @desc 対象となるスイッチの番号を指定します。
- * カンマ区切りで複数の指定が可能です。
- * (例) 11,12,13,20,21
+ * カンマ区切りで複数指定、ハイフンで範囲指定が可能です。
+ * (例) 1-3,11,12,13,20,21
  * @default 
  * 
  * @param Target Variables
  * @desc 対象となる変数の番号を指定します。
- * カンマ区切りで複数の指定が可能です。
- * (例) 11,12,13,14,15
+ * カンマ区切りで複数指定、ハイフンで範囲指定が可能です。
+ * (例) 1-5,11,12,13,23,24
  * @default 
  * 
  * @param Is Auto
@@ -133,11 +148,15 @@
  * ■パラメータの説明
  *   Target Switches [スイッチ番号, ...]
  *     共有したいスイッチの番号を指定します。「,」で区切り複数の値を指定する事ができます。
- *     (例) 11,12,13,20,21
+ *     「-」で数値の範囲を指定する事も可能です。
+ *     (例) 1-3,11,12,13,20,21
+ *            => 1,2,3,11,12,13,20,21番のスイッチが対象になる。
  * 
  *   Target Variables [変数番号, ...]
  *     共有したい変数の番号を指定します。「,」で区切り複数の値を指定する事ができます。
- *     (例) 11,12,13,14,15
+ *     「-」で数値の範囲を指定する事も可能です。
+ *     (例) 1-3,11,12,13,14,15
+ *            => 1,2,3,11,12,13,14,15番の変数が対象になる。
  * 
  *   Is Auto [true|false]
  *     セーブ・ロード時に自動的に共通セーブデータのセーブ・ロードを行うかを設定します。
@@ -151,14 +170,22 @@
  *     デバッグ用のトレースを出すかを設定します。
  * 
  * ■プラグインコマンド
- *   CommonSave load     # 共有セーブデータからスイッチ・変数を読み込み反映させます。
- *                       # 任意のタイミングで共有セーブデータのロードを行いたい場合に使用します。
- *   CommonSave save     # 共有セーブデータにスイッチ・変数の状態を記録します。
- *                       # 任意のタイミングで共有セーブデータのセーブを行いたい場合に使用します。
- *   CommonSave remove   # 共有セーブデータを削除します。
- *                       # 共有セーブデータをリセットしたい場合に使用します。
+ *   CommonSave load                  # 共有セーブデータからスイッチ・変数を読み込み反映させます。
+ *                                    # 任意のタイミングで共有セーブデータのロードを行いたい場合に使用します。
+ *   CommonSave save                  # 共有セーブデータにスイッチ・変数の状態を記録します。
+ *                                    # 任意のタイミングで共有セーブデータのセーブを行いたい場合に使用します。
+ *   CommonSave remove                # 共有セーブデータを削除します。
+ *                                    # 共有セーブデータをリセットしたい場合に使用します。
+ *   CommonSave setTrace [true|false] # コンソールにトレースを出力するかを設定します。
+ *                                    # ゲーム実行中にトレース状態を切り替えたい場合に使用します。
+ *   CommonSave check                 # 共有状態になっているスイッチ・変数番号をコンソールに表示し確認します。
  * 
  * ■更新履歴
+ *   ver 1.20 (2016.05.11)
+ *     スイッチ・変数の指定の際に「-」を使う事で範囲指定を可能に。
+ *     トレース状態を動的に変えられるように setTrace プラグインコマンドを追加。
+ *     共有対象になっているスイッチ・変数を確認できる check プラグインコマンドを追加。
+ * 
  *   ver 1.10 (2016.02.17)
  *     ファイル名をUTA_CommonSave.jsに変更。
  *     トレース出力の有無をパラメータで設定できるように。
@@ -188,6 +215,7 @@ var utakata = utakata || (utakata = {});
             this._targetSwitchList = [];
             this._targetVariableList = [];
 
+            this._showTrace = false;
             this._tr = null;
 
             this.initialize();
@@ -197,8 +225,12 @@ var utakata = utakata || (utakata = {});
         CommonSaveManager.prototype.initialize = function(){
             this.parameters = PluginManager.parameters('UTA_CommonSave');
 
-            var _show_tr = (String(this.parameters['Show Trace']) === "true");
-            this._tr = _show_tr ? function(s){ var str = "CommonSaveManager: " + s; console.log(str); } : function(s){ };
+            this._showTrace = (String(this.parameters['Show Trace']) === "true");
+
+            this._tr = function(s){
+                        if(!this._showTrace){ return; }
+                        var str = "CommonSaveManager: " + s; console.log(str);
+            };
 
             var targetSwitchStr = String(this.parameters['Target Switches']);
             var targetVariableStr = String(this.parameters['Target Variables']);
@@ -208,17 +240,55 @@ var utakata = utakata || (utakata = {});
         };
 
         CommonSaveManager.prototype._parseTargetNumber = function(str){
-            if(typeof str === "undefined" || str == "undefined"){ return []; }
-            var indexes = str.split(',', -1);
+            if(typeof str === "undefined" || str === "undefined"){ return []; }
+
+            str = str.replace(/\s+/g, "");
+
+            var split_str = ',';
+            var rgn_split_str = '-';
+
+            var indexes = str.split(split_str, -1);
             var ret = [];
 
-            for(var i = 0; i < indexes.length; i++){
-                var parseIndex = parseInt(indexes[i]);
-                if(parseIndex !== parseIndex){
-                    this._tr("_parseTargetNumber: Setting parameter is invalid.");
-                    continue;
+            var parseTargetNumbersFromRegion = function(rgn_target){
+                var ret = [];
+                var target_number = rgn_target.split(rgn_split_str, -1);
+                if(typeof target_number[0] === "undefined" || typeof target_number[1] === "undefined"){ return []; }
+
+                var s_number = parseInt(target_number[0]);
+                if(s_number !== s_number){
+                    this._tr("_parseTargetNumber getTargetNumbersFromRegion: Setting parameter is invalid.");
+                    return [];
                 }
-                ret.push(parseIndex);
+
+                var e_number = parseInt(target_number[1]);
+                if(e_number !== e_number){
+                    this._tr("_parseTargetNumber getTargetNumbersFromRegion: Setting parameter is invalid.");
+                    return [];
+                }
+
+                for(var i = s_number; i <= e_number; i++){
+                    ret.push(i);
+                }
+
+                return ret;
+            };
+
+            for(var i = 0; i < indexes.length; i++){
+                var rgn_target = indexes[i].match(/\d+-\d+/g);
+                if(!!rgn_target){
+                    var parseIndexes = parseTargetNumbersFromRegion(rgn_target[0]);
+                    if(parseIndexes.length <= 0){ continue; }
+
+                    ret = ret.concat(parseIndexes);
+                }else{
+                    var parseIndex = parseInt(indexes[i]);
+                    if(parseIndex !== parseIndex){
+                        this._tr("_parseTargetNumber: Setting parameter is invalid.");
+                        continue;
+                    }
+                    ret.push(parseIndex);
+                }
             }
             return ret;
         };
@@ -294,11 +364,29 @@ var utakata = utakata || (utakata = {});
         CommonSaveManager.prototype.exists = function(){
             this._tr("check exists common save data.");
             return StorageManager.existsCommonSave();
-        }
+        };
 
         CommonSaveManager.prototype.remove = function(){
             this._tr("remove common save data.");
             StorageManager.removeCommonSave();
+        };
+
+        CommonSaveManager.prototype.setShowTrace = function(args){
+            if(!args){ return; }
+            var enabled = String(args[1]) === "true" ? true : false;
+            this._tr("setShowTrace: " + this._showTrace);
+            this._showTrace = enabled;
+        };
+
+        CommonSaveManager.prototype.check = function(){
+            var str = "CommonSaveManager: \n";
+            str += " # Share switch targets : \n";
+            str += JSON.stringify(this._targetSwitchList);
+
+            str += "\n # Share variable targets : \n";
+            str += JSON.stringify(this._targetVariableList);
+
+            console.log(str);
         };
 
         CommonSaveManager.prototype.isAuto = function(){
@@ -335,6 +423,12 @@ var utakata = utakata || (utakata = {});
                 case 'remove':
                     utakata.CommonSaveManager.remove();
                     break;
+                case 'setTrace': 
+                    utakata.CommonSaveManager.setShowTrace(args);
+                    break;
+                case 'check': 
+                    utakata.CommonSaveManager.check();
+                    break;
                 default:
                     break;
             }
@@ -355,7 +449,7 @@ var utakata = utakata || (utakata = {});
 
     var _Data_Manager_saveGame = DataManager.saveGame;
     DataManager.saveGame = function(savefileId){
-        var ret = _Data_Manager_saveGame.call(this, savefileId)
+        var ret = _Data_Manager_saveGame.call(this, savefileId);
 
         if(utakata.CommonSaveManager.isAuto()){ utakata.CommonSaveManager.save(); }
         return ret;
