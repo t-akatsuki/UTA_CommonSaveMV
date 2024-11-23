@@ -207,10 +207,10 @@ var utakata = utakata || (utakata = {});
 //-----------------------------------------------------------------------------
 // class CommonSaveManager
 //-----------------------------------------------------------------------------
-(function(utakata){
-    var CommonSaveManager = (function(){
+(function(utakata) {
+    var CommonSaveManager = (function() {
         //constructor
-        function CommonSaveManager(){
+        function CommonSaveManager() {
             //member variables
             this._targetSwitchList = [];
             this._targetVariableList = [];
@@ -222,68 +222,68 @@ var utakata = utakata || (utakata = {});
         }
 
         //private methods
-        CommonSaveManager.prototype.initialize = function(){
-            this.parameters = PluginManager.parameters('UTA_CommonSave');
+        CommonSaveManager.prototype.initialize = function() {
+            this.parameters = PluginManager.parameters("UTA_CommonSave");
 
-            this._showTrace = (String(this.parameters['Show Trace']) === "true");
+            this._showTrace = (String(this.parameters["Show Trace"]) === "true");
 
-            this._tr = function(s){
-                        if(!this._showTrace){ return; }
-                        var str = "CommonSaveManager: " + s; console.log(str);
+            this._tr = function(s) {
+                if (!this._showTrace) { return; }
+                var str = "CommonSaveManager: " + s; console.log(str);
             };
 
-            var targetSwitchStr = String(this.parameters['Target Switches']);
-            var targetVariableStr = String(this.parameters['Target Variables']);
+            var targetSwitchStr = String(this.parameters["Target Switches"]);
+            var targetVariableStr = String(this.parameters["Target Variables"]);
 
             this._targetSwitchList = this._parseTargetNumber(targetSwitchStr);
             this._targetVariableList = this._parseTargetNumber(targetVariableStr);
         };
 
-        CommonSaveManager.prototype._parseTargetNumber = function(str){
-            if(typeof str === "undefined" || str === "undefined"){ return []; }
+        CommonSaveManager.prototype._parseTargetNumber = function(str) {
+            if (typeof str === "undefined" || str === "undefined") { return []; }
 
             str = str.replace(/\s+/g, "");
 
-            var split_str = ',';
-            var rgn_split_str = '-';
+            var split_str = ",";
+            var rgn_split_str = "-";
 
             var indexes = str.split(split_str, -1);
             var ret = [];
 
-            var parseTargetNumbersFromRegion = function(rgn_target){
+            var parseTargetNumbersFromRegion = function(rgn_target) {
                 var ret = [];
                 var target_number = rgn_target.split(rgn_split_str, -1);
-                if(typeof target_number[0] === "undefined" || typeof target_number[1] === "undefined"){ return []; }
+                if (typeof target_number[0] === "undefined" || typeof target_number[1] === "undefined") { return []; }
 
                 var s_number = parseInt(target_number[0]);
-                if(s_number !== s_number){
+                if (s_number !== s_number) {
                     this._tr("_parseTargetNumber getTargetNumbersFromRegion: Setting parameter is invalid.");
                     return [];
                 }
 
                 var e_number = parseInt(target_number[1]);
-                if(e_number !== e_number){
+                if (e_number !== e_number) {
                     this._tr("_parseTargetNumber getTargetNumbersFromRegion: Setting parameter is invalid.");
                     return [];
                 }
 
-                for(var i = s_number; i <= e_number; i++){
+                for (var i = s_number; i <= e_number; i++) {
                     ret.push(i);
                 }
 
                 return ret;
             };
 
-            for(var i = 0; i < indexes.length; i++){
+            for (var i = 0; i < indexes.length; i++) {
                 var rgn_target = indexes[i].match(/\d+-\d+/g);
-                if(!!rgn_target){
+                if (!!rgn_target) {
                     var parseIndexes = parseTargetNumbersFromRegion(rgn_target[0]);
-                    if(parseIndexes.length <= 0){ continue; }
+                    if (parseIndexes.length <= 0) { continue; }
 
                     ret = ret.concat(parseIndexes);
-                }else{
+                } else {
                     var parseIndex = parseInt(indexes[i]);
-                    if(parseIndex !== parseIndex){
+                    if (parseIndex !== parseIndex) {
                         this._tr("_parseTargetNumber: Setting parameter is invalid.");
                         continue;
                     }
@@ -293,10 +293,10 @@ var utakata = utakata || (utakata = {});
             return ret;
         };
 
-        CommonSaveManager.prototype._getTargetSwitchJson = function(){
+        CommonSaveManager.prototype._getTargetSwitchJson = function() {
             var json = { };
 
-            for(var i = 0; i < this._targetSwitchList.length; i++){
+            for (var i = 0; i < this._targetSwitchList.length; i++) {
                 var idx = this._targetSwitchList[i].toString();
                 var value = $gameSwitches.value(idx);
                 json[idx] = value;
@@ -305,10 +305,10 @@ var utakata = utakata || (utakata = {});
             return json;
         };
 
-        CommonSaveManager.prototype._getTargetVariableJson = function(){
+        CommonSaveManager.prototype._getTargetVariableJson = function() {
             var json = { };
 
-            for(var i = 0; i < this._targetVariableList.length; i++){
+            for (var i = 0; i < this._targetVariableList.length; i++) {
                 var idx = this._targetVariableList[i].toString();
                 var value = $gameVariables.value(idx);
                 json[idx] = value;
@@ -317,16 +317,16 @@ var utakata = utakata || (utakata = {});
             return json;
         };
 
-        CommonSaveManager.prototype.setLoadSwitches = function(switches){
-            for(var key in switches){
+        CommonSaveManager.prototype.setLoadSwitches = function(switches) {
+            for (var key in switches) {
                 var idx = parseInt(key);
                 var value = switches[key];
                 $gameSwitches.setValue(idx, value);
             }
         };
 
-        CommonSaveManager.prototype.setLoadVariables = function(variables){
-            for(var key in variables){
+        CommonSaveManager.prototype.setLoadVariables = function(variables) {
+            for (var key in variables) {
                 var idx = parseInt(key);
                 var value = variables[key];
                 $gameVariables.setValue(idx, value);
@@ -334,51 +334,51 @@ var utakata = utakata || (utakata = {});
         };
 
         //public methods
-        CommonSaveManager.prototype.load = function(){
+        CommonSaveManager.prototype.load = function() {
             this._tr("load common save data.");
 
-            if(!this.exists()){ return false; }
+            if (!this.exists()) { return false; }
 
             var loadData = DataManager.loadCommonSave();
 
-            if("gameSwitches" in loadData){
+            if ("gameSwitches" in loadData) {
                 this.setLoadSwitches(loadData["gameSwitches"]);
             }
-            if("gameVariables" in loadData){
+            if ("gameVariables" in loadData) {
                 this.setLoadVariables(loadData["gameVariables"]);
             }
         };
 
-        CommonSaveManager.prototype.save = function(){
+        CommonSaveManager.prototype.save = function() {
             this._tr("save common save data.");
 
             var switchesJson = this._getTargetSwitchJson();
             var variablesJson = this._getTargetVariableJson();
 
             var json = { "gameSwitches": switchesJson, 
-                         "gameVariables": variablesJson };
+                "gameVariables": variablesJson };
 
             DataManager.saveCommonSave(json);
         };
 
-        CommonSaveManager.prototype.exists = function(){
+        CommonSaveManager.prototype.exists = function() {
             this._tr("check exists common save data.");
             return StorageManager.existsCommonSave();
         };
 
-        CommonSaveManager.prototype.remove = function(){
+        CommonSaveManager.prototype.remove = function() {
             this._tr("remove common save data.");
             StorageManager.removeCommonSave();
         };
 
-        CommonSaveManager.prototype.setShowTrace = function(args){
-            if(!args){ return; }
+        CommonSaveManager.prototype.setShowTrace = function(args) {
+            if (!args) { return; }
             var enabled = String(args[1]) === "true" ? true : false;
             this._tr("setShowTrace: " + this._showTrace);
             this._showTrace = enabled;
         };
 
-        CommonSaveManager.prototype.check = function(){
+        CommonSaveManager.prototype.check = function() {
             var str = "CommonSaveManager: \n";
             str += " # Share switch targets : \n";
             str += JSON.stringify(this._targetSwitchList);
@@ -389,12 +389,12 @@ var utakata = utakata || (utakata = {});
             console.log(str);
         };
 
-        CommonSaveManager.prototype.isAuto = function(){
-            return String(this.parameters['Is Auto']) === "true";
+        CommonSaveManager.prototype.isAuto = function() {
+            return String(this.parameters["Is Auto"]) === "true";
         };
 
-        CommonSaveManager.prototype.isAutoOnGameOver = function(){
-            return String(this.parameters['Auto on Gameover']) === "true";
+        CommonSaveManager.prototype.isAutoOnGameOver = function() {
+            return String(this.parameters["Auto on Gameover"]) === "true";
         };
 
         return CommonSaveManager;
@@ -403,34 +403,34 @@ var utakata = utakata || (utakata = {});
 
 })(utakata || (utakata = {}));
 
-(function(){
+(function() {
     //parse and dispatch plugin command
     var _Game_Interpreter_pluginCommand = 
             Game_Interpreter.prototype.pluginCommand;
-    Game_Interpreter.prototype.pluginCommand = function(command, args){
+    Game_Interpreter.prototype.pluginCommand = function(command, args) {
         _Game_Interpreter_pluginCommand.call(this, command, args);
-        if(command === 'CommonSave'){
-            switch(args[0]){
-                case 'load':
-                    utakata.CommonSaveManager.load();
-                    break;
-                case 'save':
-                    utakata.CommonSaveManager.save();
-                    break;
-                case 'exists':
-                    utakata.CommonSaveManager.exists();
-                    break;
-                case 'remove':
-                    utakata.CommonSaveManager.remove();
-                    break;
-                case 'setTrace': 
-                    utakata.CommonSaveManager.setShowTrace(args);
-                    break;
-                case 'check': 
-                    utakata.CommonSaveManager.check();
-                    break;
-                default:
-                    break;
+        if (command === "CommonSave") {
+            switch (args[0]) {
+            case "load":
+                utakata.CommonSaveManager.load();
+                break;
+            case "save":
+                utakata.CommonSaveManager.save();
+                break;
+            case "exists":
+                utakata.CommonSaveManager.exists();
+                break;
+            case "remove":
+                utakata.CommonSaveManager.remove();
+                break;
+            case "setTrace": 
+                utakata.CommonSaveManager.setShowTrace(args);
+                break;
+            case "check": 
+                utakata.CommonSaveManager.check();
+                break;
+            default:
+                break;
             }
         }
     };
@@ -440,48 +440,48 @@ var utakata = utakata || (utakata = {});
     //-----------------------------------------------------------------------------
     // # extension
     var _Data_Manager_loadGame = DataManager.loadGame;
-    DataManager.loadGame = function(savefileId){
+    DataManager.loadGame = function(savefileId) {
         var ret = _Data_Manager_loadGame.call(this, savefileId);
 
-        if(utakata.CommonSaveManager.isAuto()){ utakata.CommonSaveManager.load(); }
+        if (utakata.CommonSaveManager.isAuto()) { utakata.CommonSaveManager.load(); }
         return ret;
     };
 
     var _Data_Manager_saveGame = DataManager.saveGame;
-    DataManager.saveGame = function(savefileId){
+    DataManager.saveGame = function(savefileId) {
         var ret = _Data_Manager_saveGame.call(this, savefileId);
 
-        if(utakata.CommonSaveManager.isAuto()){ utakata.CommonSaveManager.save(); }
+        if (utakata.CommonSaveManager.isAuto()) { utakata.CommonSaveManager.save(); }
         return ret;
     };
 
     var _Data_Manager_setupNewGame = DataManager.setupNewGame;
-    DataManager.setupNewGame = function(){
+    DataManager.setupNewGame = function() {
         _Data_Manager_setupNewGame.call(this);
-        if(utakata.CommonSaveManager.isAuto()){ utakata.CommonSaveManager.load(); }
+        if (utakata.CommonSaveManager.isAuto()) { utakata.CommonSaveManager.load(); }
     };
 
     // # add methods
-    DataManager.loadCommonSave = function(){
+    DataManager.loadCommonSave = function() {
         var json;
-        try{
+        try {
             json = StorageManager.loadCommonSave();
-        }catch(e){
+        } catch (e) {
             console.error(e);
             return [];
         }
-        if(json){
+        if (json) {
             var commonInfo = JSON.parse(json);
             return commonInfo;
-        }else{
+        } else {
             return [];
         }
     };
 
-    DataManager.saveCommonSave = function(json){
+    DataManager.saveCommonSave = function(json) {
         var jsonStr = JsonEx.stringify(json);
-        if(jsonStr.length >= 200000){
-            console.warn('Common Save too big!');
+        if (jsonStr.length >= 200000) {
+            console.warn("Common Save too big!");
         }
         StorageManager.saveCommonSave(jsonStr);
         return true;
@@ -491,42 +491,42 @@ var utakata = utakata || (utakata = {});
     // StorageManager
     //-----------------------------------------------------------------------------
     //load methods ----------------------------------------------------------------
-    StorageManager.loadCommonSave = function(){
-        if(this.isLocalMode()){
+    StorageManager.loadCommonSave = function() {
+        if (this.isLocalMode()) {
             return this.loadFromLocalFileCommonSave();
-        }else{
+        } else {
             return this.loadFromWebStorageCommonSave();
         }
     };
 
-    StorageManager.loadFromLocalFileCommonSave = function(){
+    StorageManager.loadFromLocalFileCommonSave = function() {
         var data = null;
-        var fs = require('fs');
+        var fs = require("fs");
         var filePath = this.localFilePathCommonSave();
         if (fs.existsSync(filePath)) {
-            data = fs.readFileSync(filePath, { encoding: 'utf8' });
+            data = fs.readFileSync(filePath, { "encoding": "utf8" });
         }
         return LZString.decompressFromBase64(data);
     };
 
-    StorageManager.loadFromWebStorageCommonSave = function(){
+    StorageManager.loadFromWebStorageCommonSave = function() {
         var key = this.webStorageKeyCommonSave();
         var data = localStorage.getItem(key);
         return LZString.decompressFromBase64(data);
     };
 
     // save methods ---------------------------------------------------------------
-    StorageManager.saveCommonSave = function(json){
-        if(this.isLocalMode()){
+    StorageManager.saveCommonSave = function(json) {
+        if (this.isLocalMode()) {
             this.saveToLocalFileCommonSave(json);
-        }else{
+        } else {
             this.saveToWebStorageCommonSave(json);
         }
     };
 
-    StorageManager.saveToLocalFileCommonSave = function(json){
+    StorageManager.saveToLocalFileCommonSave = function(json) {
         var data = LZString.compressToBase64(json);
-        var fs = require('fs');
+        var fs = require("fs");
         var dirPath = this.localFileDirectoryPath();
         var filePath = this.localFilePathCommonSave();
         if (!fs.existsSync(dirPath)) {
@@ -535,63 +535,63 @@ var utakata = utakata || (utakata = {});
         fs.writeFileSync(filePath, data);
     };
 
-    StorageManager.saveToWebStorageCommonSave = function(json){
+    StorageManager.saveToWebStorageCommonSave = function(json) {
         var key = this.webStorageKeyCommonSave();
         var data = LZString.compressToBase64(json);
         localStorage.setItem(key, data);
     };
 
     //check exists ----------------------------------------------------------------
-    StorageManager.existsCommonSave = function(){
-        if(this.isLocalMode()){
+    StorageManager.existsCommonSave = function() {
+        if (this.isLocalMode()) {
             return this.localFileExistsCommonSave();
-        }else{
+        } else {
             return this.webStorageExistsCommonSave();
         }
     };
 
-    StorageManager.localFileExistsCommonSave = function(){
-        var fs = require('fs');
+    StorageManager.localFileExistsCommonSave = function() {
+        var fs = require("fs");
         return fs.existsSync(this.localFilePathCommonSave());
     };
 
-    StorageManager.webStorageExistsCommonSave = function(){
+    StorageManager.webStorageExistsCommonSave = function() {
         var key = this.webStorageKeyCommonSave();
         return !!localStorage.getItem(key);
     };
 
     //remove ----------------------------------------------------------------------
-    StorageManager.removeCommonSave = function(){
-        if(this.isLocalMode()){
+    StorageManager.removeCommonSave = function() {
+        if (this.isLocalMode()) {
             this.removeLocalFileCommonSave();
-        }else{
+        } else {
             this.removeWebStorageCommonSave();
         }
     };
 
-    StorageManager.removeLocalFileCommonSave = function(){
-        var fs = require('fs');
+    StorageManager.removeLocalFileCommonSave = function() {
+        var fs = require("fs");
         var filePath = this.localFilePathCommonSave();
-        if(fs.existsSync(filePath)){
+        if (fs.existsSync(filePath)) {
             fs.unlinkSync(filePath);
         }
     };
 
-    StorageManager.removeWebStorageCommonSave = function(){
+    StorageManager.removeWebStorageCommonSave = function() {
         var key = this.webStorageKeyCommonSave();
         localStorage.removeItem(key);
     };
 
-    StorageManager.localFilePathCommonSave = function(){ return this.localFileDirectoryPath() + 'common.rpgsave'; };
-    StorageManager.webStorageKeyCommonSave = function(){ return 'RPG Common'; };
+    StorageManager.localFilePathCommonSave = function() { return this.localFileDirectoryPath() + "common.rpgsave"; };
+    StorageManager.webStorageKeyCommonSave = function() { return "RPG Common"; };
 
 
     //-----------------------------------------------------------------------------
     // Scene_Gameover
     //-----------------------------------------------------------------------------
     var _Scene_Gameover_Start = Scene_Gameover.prototype.start;
-    Scene_Gameover.prototype.start = function(){
-        if(utakata.CommonSaveManager.isAutoOnGameOver()){
+    Scene_Gameover.prototype.start = function() {
+        if (utakata.CommonSaveManager.isAutoOnGameOver()) {
             utakata.CommonSaveManager.save();
         }
         _Scene_Gameover_Start.call(this);
