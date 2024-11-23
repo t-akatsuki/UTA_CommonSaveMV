@@ -598,14 +598,17 @@ var utakata = utakata || {};
      * @memberof StorageManager
      * @static
      * @method
-     * @return {string|null} ロードした共通セーブデータのjson文字列。
+     * @return {string|null} ロードした共通セーブデータのjson文字列。  
+     * ロード対象が存在しない場合はnullを返す。
      */
     StorageManager.loadCommonSave = function() {
+        var ret = null;
         if (this.isLocalMode()) {
-            return this.loadFromLocalFileCommonSave();
+            ret = this.loadFromLocalFileCommonSave();
         } else {
-            return this.loadFromWebStorageCommonSave();
+            ret = this.loadFromWebStorageCommonSave();
         }
+        return ret;
     };
 
     /**
