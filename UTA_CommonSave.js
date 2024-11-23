@@ -213,7 +213,9 @@ var utakata = utakata || {};
      * @classdesc 共通セーブデータを管理する静的クラス。
      */
     var CommonSaveManager = (function() {
-        //constructor
+        /**
+         * @constructor
+         */
         function CommonSaveManager() {
             //member variables
             this._targetSwitchList = [];
@@ -222,11 +224,15 @@ var utakata = utakata || {};
             this._showTrace = false;
             this._tr = null;
 
-            this.initialize();
+            this._initialize();
         }
 
-        //private methods
-        CommonSaveManager.prototype.initialize = function() {
+        /**
+         * 初期化処理。
+         * @private
+         * @method
+         */
+        CommonSaveManager.prototype._initialize = function() {
             this.parameters = PluginManager.parameters("UTA_CommonSave");
 
             this._showTrace = (String(this.parameters["Show Trace"]) === "true");
@@ -243,6 +249,13 @@ var utakata = utakata || {};
             this._targetVariableList = this._parseTargetNumber(targetVariableStr);
         };
 
+        /**
+         * 引数で与えた対象番号文字列を解析し、対象番号の配列として得る。
+         * @private
+         * @method
+         * @param {string} str 解析対象文字列。
+         * @return {number[]} 対象番号の配列。
+         */
         CommonSaveManager.prototype._parseTargetNumber = function(str) {
             if (typeof str === "undefined" || str === "undefined") { return []; }
 
@@ -297,6 +310,12 @@ var utakata = utakata || {};
             return ret;
         };
 
+        /**
+         * 対象スイッチの状態を連想配列として得る。
+         * @private
+         * @method
+         * @return {object} 対象スイッチ状態の連想配列。
+         */
         CommonSaveManager.prototype._getTargetSwitchJson = function() {
             var json = { };
 
@@ -309,6 +328,12 @@ var utakata = utakata || {};
             return json;
         };
 
+        /**
+         * 対象変数状態を連想配列として得る。
+         * @private
+         * @method
+         * @return {object} 対象変数状態の連想配列。
+         */
         CommonSaveManager.prototype._getTargetVariableJson = function() {
             var json = { };
 
@@ -321,6 +346,11 @@ var utakata = utakata || {};
             return json;
         };
 
+        /**
+         * スイッチデータを現在のメモリ状態に反映する。
+         * @method
+         * @param {object} switches ロード対象のスイッチデータ。
+         */
         CommonSaveManager.prototype.setLoadSwitches = function(switches) {
             for (var key in switches) {
                 var idx = parseInt(key);
@@ -329,6 +359,11 @@ var utakata = utakata || {};
             }
         };
 
+        /**
+         * 変数データを現在のメモリ状態に反映する。
+         * @method
+         * @param {object} variables ロード対象の変数データ。
+         */
         CommonSaveManager.prototype.setLoadVariables = function(variables) {
             for (var key in variables) {
                 var idx = parseInt(key);
@@ -337,7 +372,11 @@ var utakata = utakata || {};
             }
         };
 
-        //public methods
+        /**
+         * プラグインコマンド`CommonSave load`の処理実体。  
+         * 共通セーブデータが存在しない場合は何もしない。
+         * @method
+         */
         CommonSaveManager.prototype.load = function() {
             this._tr("load common save data.");
 
@@ -353,6 +392,10 @@ var utakata = utakata || {};
             }
         };
 
+        /**
+         * プラグインコマンド`CommonSave save`の処理実体。
+         * @method
+         */
         CommonSaveManager.prototype.save = function() {
             this._tr("save common save data.");
 
@@ -365,16 +408,32 @@ var utakata = utakata || {};
             DataManager.saveCommonSave(json);
         };
 
+        /**
+         * 共通セーブデータが存在しているかを確認する。
+         * @method
+         * @return {boolean} 共通セーブデータが存在している場合はtrueを返す。
+         */
         CommonSaveManager.prototype.exists = function() {
             this._tr("check exists common save data.");
             return StorageManager.existsCommonSave();
         };
 
+        /**
+         * 共通セーブデータを削除する。  
+         * プラグインコマンド`CommonSave remove`の処理実体。
+         * @method
+         */
         CommonSaveManager.prototype.remove = function() {
             this._tr("remove common save data.");
             StorageManager.removeCommonSave();
         };
 
+        /**
+         * デバッグトレースの表示設定を行う。  
+         * プラグインコマンド`CommonSave setTrace`の処理実体。
+         * @method
+         * @param {any[]} args プラグインコマンド引数配列。
+         */
         CommonSaveManager.prototype.setShowTrace = function(args) {
             if (!args) { return; }
             var enabled = String(args[1]) === "true" ? true : false;
@@ -382,6 +441,11 @@ var utakata = utakata || {};
             this._showTrace = enabled;
         };
 
+        /**
+         * 現在共通セーブの対象としているスイッチ・変数をコンソール上に出力する。  
+         * プラグインコマンド`CommonSave check`の処理実体。
+         * @method
+         */
         CommonSaveManager.prototype.check = function() {
             var str = "CommonSaveManager: \n";
             str += " # Share switch targets : \n";
@@ -393,10 +457,20 @@ var utakata = utakata || {};
             console.log(str);
         };
 
+        /**
+         * 共通セーブの自動セーブ・ロードの状態を取得する。
+         * @method
+         * @return {boolean} true : 自動セーブ・ロード有効。 false: 自動セーブ・ロード無効。
+         */
         CommonSaveManager.prototype.isAuto = function() {
             return String(this.parameters["Is Auto"]) === "true";
         };
 
+        /**
+         * ゲームオーバー時の共通セーブ自動化状態を取得する。
+         * @method
+         * @return {boolean} true : 自動セーブ・ロード有効。 false: 自動セーブ・ロード無効。
+         */
         CommonSaveManager.prototype.isAutoOnGameOver = function() {
             return String(this.parameters["Auto on Gameover"]) === "true";
         };
@@ -406,11 +480,10 @@ var utakata = utakata || {};
     utakata.CommonSaveManager = new CommonSaveManager();
 
     //-----------------------------------------------------------------------------
-    // GameInterpreter
+    // Game_Interpreter
     //-----------------------------------------------------------------------------
     //parse and dispatch plugin command
-    var _Game_Interpreter_pluginCommand = 
-            Game_Interpreter.prototype.pluginCommand;
+    var _Game_Interpreter_pluginCommand = Game_Interpreter.prototype.pluginCommand;
     Game_Interpreter.prototype.pluginCommand = function(command, args) {
         _Game_Interpreter_pluginCommand.call(this, command, args);
         if (command === "CommonSave") {
@@ -442,7 +515,6 @@ var utakata = utakata || {};
     //-----------------------------------------------------------------------------
     // DataManager
     //-----------------------------------------------------------------------------
-    // # extension
     var _Data_Manager_loadGame = DataManager.loadGame;
     DataManager.loadGame = function(savefileId) {
         var ret = _Data_Manager_loadGame.call(this, savefileId);
@@ -465,8 +537,17 @@ var utakata = utakata || {};
         if (utakata.CommonSaveManager.isAuto()) { utakata.CommonSaveManager.load(); }
     };
 
-    // # add methods
+    /**
+     * 共通セーブデータをロードする。
+     * @memberof DataManager
+     * @static
+     * @method
+     * @return {object|null} ロードした共通セーブデータの連想配列。
+     */
     DataManager.loadCommonSave = function() {
+        /**
+         * ToDo: 型安全性を担保する。
+         */
         var json;
         try {
             json = StorageManager.loadCommonSave();
@@ -482,8 +563,19 @@ var utakata = utakata || {};
         }
     };
 
+    /**
+     * 共通セーブデータのセーブ処理を実行する。
+     * @memberof DataManager
+     * @static
+     * @method
+     * @param {object} json 共通セーブするデータの連想配列。
+     * @return {boolean} 成功した場合trueを返す。
+     */
     DataManager.saveCommonSave = function(json) {
         var jsonStr = JsonEx.stringify(json);
+        /**
+         * ToDo: コアスクリプト側にも存在するが、意味の無い処理なので削除する。
+         */
         if (jsonStr.length >= 200000) {
             console.warn("Common Save too big!");
         }
@@ -494,7 +586,13 @@ var utakata = utakata || {};
     //-----------------------------------------------------------------------------
     // StorageManager
     //-----------------------------------------------------------------------------
-    //load methods ----------------------------------------------------------------
+    /**
+     * 共通セーブデータをロードしてデータ文字列を得る。
+     * @memberof StorageManager
+     * @static
+     * @method
+     * @return {string|null} ロードした共通セーブデータのjson文字列。
+     */
     StorageManager.loadCommonSave = function() {
         if (this.isLocalMode()) {
             return this.loadFromLocalFileCommonSave();
@@ -503,7 +601,18 @@ var utakata = utakata || {};
         }
     };
 
+    /**
+     * ローカルの共通セーブファイルからロードしたデータ文字列を得る。
+     * @memberof StorageManager
+     * @static
+     * @method
+     * @return {string|null} ロードした共通セーブデータのjson文字列。
+     */
     StorageManager.loadFromLocalFileCommonSave = function() {
+        /**
+         * ToDo: ファイルが存在しなかった場合にnullではなく、空文字列が返る可能性がある。
+         * 空文字列はjson文字列としては不適切である為、明示的にnullを返すようにする。
+         */
         var data = null;
         var fs = require("fs");
         var filePath = this.localFilePathCommonSave();
@@ -513,13 +622,31 @@ var utakata = utakata || {};
         return LZString.decompressFromBase64(data);
     };
 
+    /**
+     * WebStorage内の共通セーブデータからロードしたデータ文字列を得る。
+     * @memberof StorageManager
+     * @static
+     * @method
+     * @return {string|null} ロードした共通セーブデータのjson文字列。
+     */
     StorageManager.loadFromWebStorageCommonSave = function() {
+        /**
+         * ToDo: ファイルが存在しなかった場合にnullではなく、空文字列が返る可能性がある。
+         * 空文字列はjson文字列としては不適切である為、明示的にnullを返すようにする。
+         */
         var key = this.webStorageKeyCommonSave();
         var data = localStorage.getItem(key);
         return LZString.decompressFromBase64(data);
     };
 
     // save methods ---------------------------------------------------------------
+    /**
+     * 共通セーブデータをファイル/WebStorageに書き出す。
+     * @memberof StorageManager
+     * @static
+     * @method
+     * @param {string} json 共通セーブ対象データのjson文字列。
+     */
     StorageManager.saveCommonSave = function(json) {
         if (this.isLocalMode()) {
             this.saveToLocalFileCommonSave(json);
@@ -528,6 +655,13 @@ var utakata = utakata || {};
         }
     };
 
+    /**
+     * 共通セーブデータをローカルセーブファイルに書き出す。
+     * @memberof StorageManager
+     * @static
+     * @method
+     * @param {string} json 共通セーブ対象データのjson文字列。
+     */
     StorageManager.saveToLocalFileCommonSave = function(json) {
         var data = LZString.compressToBase64(json);
         var fs = require("fs");
@@ -539,6 +673,13 @@ var utakata = utakata || {};
         fs.writeFileSync(filePath, data);
     };
 
+    /**
+     * 共通セーブデータをWebStorageに書き出す。
+     * @memberof StorageManager
+     * @static
+     * @method
+     * @param {string} json 共通セーブ対象データのjson文字列。
+     */
     StorageManager.saveToWebStorageCommonSave = function(json) {
         var key = this.webStorageKeyCommonSave();
         var data = LZString.compressToBase64(json);
@@ -546,6 +687,13 @@ var utakata = utakata || {};
     };
 
     //check exists ----------------------------------------------------------------
+    /**
+     * 共通セーブデータが存在しているかを確認する。
+     * @memberof StorageManager
+     * @static
+     * @method
+     * @return {boolean} 共通セーブデータが存在している場合はtrueを返す。
+     */
     StorageManager.existsCommonSave = function() {
         if (this.isLocalMode()) {
             return this.localFileExistsCommonSave();
@@ -554,17 +702,36 @@ var utakata = utakata || {};
         }
     };
 
+    /**
+     * ローカルの共通セーブファイルが存在しているかを確認する。
+     * @memberof StorageManager
+     * @static
+     * @method
+     * @return {boolean} ローカルの共通セーブファイルが存在している場合はtrueを返す。
+     */
     StorageManager.localFileExistsCommonSave = function() {
         var fs = require("fs");
         return fs.existsSync(this.localFilePathCommonSave());
     };
 
+    /**
+     * WebStorage内に共通セーブデータが存在しているかを確認する。
+     * @static
+     * @method
+     * @return {boolean} WebStorage内に共通セーブデータが存在している場合はtrueを返す。
+     */
     StorageManager.webStorageExistsCommonSave = function() {
         var key = this.webStorageKeyCommonSave();
         return !!localStorage.getItem(key);
     };
 
     //remove ----------------------------------------------------------------------
+    /**
+     * 共通セーブデータを削除する。
+     * @memberof StorageManager
+     * @static
+     * @method
+     */
     StorageManager.removeCommonSave = function() {
         if (this.isLocalMode()) {
             this.removeLocalFileCommonSave();
@@ -573,6 +740,12 @@ var utakata = utakata || {};
         }
     };
 
+    /**
+     * ローカル上の共通セーブファイルを削除する。
+     * @memberof StorageManager
+     * @static
+     * @method
+     */
     StorageManager.removeLocalFileCommonSave = function() {
         var fs = require("fs");
         var filePath = this.localFilePathCommonSave();
@@ -581,13 +754,38 @@ var utakata = utakata || {};
         }
     };
 
+    /**
+     * WebStorage上の共通セーブデータを削除する。
+     * @memberof StorageManager
+     * @static
+     * @method
+     */
     StorageManager.removeWebStorageCommonSave = function() {
         var key = this.webStorageKeyCommonSave();
         localStorage.removeItem(key);
     };
 
-    StorageManager.localFilePathCommonSave = function() { return this.localFileDirectoryPath() + "common.rpgsave"; };
-    StorageManager.webStorageKeyCommonSave = function() { return "RPG Common"; };
+    /**
+     * 共通セーブデータのファイルパスを取得する。
+     * @memberof StorageManager
+     * @static
+     * @method
+     * @return {string}
+     */
+    StorageManager.localFilePathCommonSave = function() {
+        return this.localFileDirectoryPath() + "common.rpgsave";
+    };
+
+    /**
+     * 共通セーブデータ用のWebStorageキーを取得する。
+     * @memberof StorageManager
+     * @static
+     * @method
+     * @return {string}
+     */
+    StorageManager.webStorageKeyCommonSave = function() {
+        return "RPG Common";
+    };
 
     //-----------------------------------------------------------------------------
     // Scene_Gameover
