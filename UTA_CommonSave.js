@@ -647,11 +647,11 @@ var utakata = utakata || {};
      * @method
      * @param {string} json 共通セーブ対象データのjson文字列。
      */
-    StorageManager.saveCommonSave = function(json) {
+    StorageManager.saveCommonSave = function(jsonStr) {
         if (this.isLocalMode()) {
-            this.saveToLocalFileCommonSave(json);
+            this.saveToLocalFileCommonSave(jsonStr);
         } else {
-            this.saveToWebStorageCommonSave(json);
+            this.saveToWebStorageCommonSave(jsonStr);
         }
     };
 
@@ -660,10 +660,10 @@ var utakata = utakata || {};
      * @memberof StorageManager
      * @static
      * @method
-     * @param {string} json 共通セーブ対象データのjson文字列。
+     * @param {string} jsonStr 共通セーブ対象データのjson文字列。
      */
-    StorageManager.saveToLocalFileCommonSave = function(json) {
-        var data = LZString.compressToBase64(json);
+    StorageManager.saveToLocalFileCommonSave = function(jsonStr) {
+        var data = LZString.compressToBase64(jsonStr);
         var fs = require("fs");
         var dirPath = this.localFileDirectoryPath();
         var filePath = this.localFilePathCommonSave();
@@ -678,11 +678,11 @@ var utakata = utakata || {};
      * @memberof StorageManager
      * @static
      * @method
-     * @param {string} json 共通セーブ対象データのjson文字列。
+     * @param {string} jsonStr 共通セーブ対象データのjson文字列。
      */
-    StorageManager.saveToWebStorageCommonSave = function(json) {
+    StorageManager.saveToWebStorageCommonSave = function(jsonStr) {
         var key = this.webStorageKeyCommonSave();
-        var data = LZString.compressToBase64(json);
+        var data = LZString.compressToBase64(jsonStr);
         localStorage.setItem(key, data);
     };
 
