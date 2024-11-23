@@ -644,7 +644,6 @@ var utakata = utakata || {};
         return LZString.decompressFromBase64(data);
     };
 
-    // save methods ---------------------------------------------------------------
     /**
      * 共通セーブデータをファイル/WebStorageに書き出す。
      * @memberof StorageManager
@@ -691,7 +690,6 @@ var utakata = utakata || {};
         localStorage.setItem(key, data);
     };
 
-    //check exists ----------------------------------------------------------------
     /**
      * 共通セーブデータが存在しているかを確認する。
      * @memberof StorageManager
