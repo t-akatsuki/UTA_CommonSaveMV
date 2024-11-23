@@ -202,13 +202,16 @@
 //=============================================================================
 "use strict";
 
-//name space
-var utakata = utakata || (utakata = {});
+/**
+ * @namespace
+ */
+var utakata = utakata || {};
 
-//-----------------------------------------------------------------------------
-// class CommonSaveManager
-//-----------------------------------------------------------------------------
 (function(utakata) {
+    /**
+     * @class CommonSaveManager
+     * @classdesc 共通セーブデータを管理する静的クラス。
+     */
     var CommonSaveManager = (function() {
         //constructor
         function CommonSaveManager() {
@@ -402,9 +405,9 @@ var utakata = utakata || (utakata = {});
     })();
     utakata.CommonSaveManager = new CommonSaveManager();
 
-})(utakata || (utakata = {}));
-
-(function() {
+    //-----------------------------------------------------------------------------
+    // GameInterpreter
+    //-----------------------------------------------------------------------------
     //parse and dispatch plugin command
     var _Game_Interpreter_pluginCommand = 
             Game_Interpreter.prototype.pluginCommand;
@@ -586,7 +589,6 @@ var utakata = utakata || (utakata = {});
     StorageManager.localFilePathCommonSave = function() { return this.localFileDirectoryPath() + "common.rpgsave"; };
     StorageManager.webStorageKeyCommonSave = function() { return "RPG Common"; };
 
-
     //-----------------------------------------------------------------------------
     // Scene_Gameover
     //-----------------------------------------------------------------------------
@@ -598,4 +600,4 @@ var utakata = utakata || (utakata = {});
         _Scene_Gameover_Start.call(this);
     };
 
-})();
+})(utakata);
