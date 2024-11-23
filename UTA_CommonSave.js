@@ -575,17 +575,11 @@ var utakata = utakata || {};
      * @memberof DataManager
      * @static
      * @method
-     * @param {object} json 共通セーブするデータの連想配列。
+     * @param {object} data 共通セーブするデータの連想配列。
      * @return {boolean} 成功した場合trueを返す。
      */
-    DataManager.saveCommonSave = function(json) {
-        var jsonStr = JsonEx.stringify(json);
-        /**
-         * ToDo: コアスクリプト側にも存在するが、意味の無い処理なので削除する。
-         */
-        if (jsonStr.length >= 200000) {
-            console.warn("Common Save too big!");
-        }
+    DataManager.saveCommonSave = function(data) {
+        var jsonStr = JsonEx.stringify(data);
         StorageManager.saveCommonSave(jsonStr);
         return true;
     };
