@@ -542,25 +542,32 @@ var utakata = utakata || {};
      * @memberof DataManager
      * @static
      * @method
-     * @return {object|null} ロードした共通セーブデータの連想配列。
+     * @return {object} ロードした共通セーブデータの連想配列。  
+     * ロード失敗した場合は空の連想配列を返す。
      */
     DataManager.loadCommonSave = function() {
-        /**
-         * ToDo: 型安全性を担保する。
-         */
-        var json;
+        var ret = null;
+        var data = null;
         try {
-            json = StorageManager.loadCommonSave();
+            data = StorageManager.loadCommonSave();
+            if (!data) {
+                return {};
+            }
         } catch (e) {
+            console.error("utakata.CommonSaveManager: Failed to load common save.");
             console.error(e);
-            return [];
+            return {};
         }
-        if (json) {
-            var commonInfo = JSON.parse(json);
-            return commonInfo;
-        } else {
-            return [];
+
+        try {
+            ret = JSON.parse(data);
+        } catch (e) {
+            console.error("utakata.CommonSaveManager: Failed to load common save. Parsing error occurred.");
+            console.error(e);
+            return {};
         }
+
+        return ret;
     };
 
     /**
@@ -606,19 +613,19 @@ var utakata = utakata || {};
      * @memberof StorageManager
      * @static
      * @method
-     * @return {string|null} ロードした共通セーブデータのjson文字列。
+     * @return {string|null} ロードした共通セーブデータのjson文字列。  
+     * ロード対象が存在しない場合はnullを返す。
      */
     StorageManager.loadFromLocalFileCommonSave = function() {
-        /**
-         * ToDo: ファイルが存在しなかった場合にnullではなく、空文字列が返る可能性がある。
-         * 空文字列はjson文字列としては不適切である為、明示的にnullを返すようにする。
-         */
-        var data = null;
-        var fs = require("fs");
-        var filePath = this.localFilePathCommonSave();
-        if (fs.existsSync(filePath)) {
-            data = fs.readFileSync(filePath, { "encoding": "utf8" });
+        if (!this.existsCommonSave()) {
+            return null;
         }
+
+        var filePath = this.localFilePathCommonSave();
+        var fs = require("fs");
+        var data = fs.readFileSync(filePath, {
+            "encoding": "utf8"
+        });
         return LZString.decompressFromBase64(data);
     };
 
@@ -627,13 +634,14 @@ var utakata = utakata || {};
      * @memberof StorageManager
      * @static
      * @method
-     * @return {string|null} ロードした共通セーブデータのjson文字列。
+     * @return {string|null} ロードした共通セーブデータのjson文字列。  
+     * ロード対象が存在しない場合はnullを返す。
      */
     StorageManager.loadFromWebStorageCommonSave = function() {
-        /**
-         * ToDo: ファイルが存在しなかった場合にnullではなく、空文字列が返る可能性がある。
-         * 空文字列はjson文字列としては不適切である為、明示的にnullを返すようにする。
-         */
+        if (!this.existsCommonSave()) {
+            return null;
+        }
+
         var key = this.webStorageKeyCommonSave();
         var data = localStorage.getItem(key);
         return LZString.decompressFromBase64(data);
