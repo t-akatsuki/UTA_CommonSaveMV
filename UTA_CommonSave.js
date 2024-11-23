@@ -227,6 +227,21 @@ var utakata = utakata || {};
             this._initialize();
         }
 
+        // class variables
+        /**
+         * セーブファイル名。
+         * @static
+         * @type {string}
+         */
+        CommonSaveManager.SAVE_FILENAME = "common.rpgsave";
+
+        /**
+         * 共通セーブのWebStorage用キー名。
+         * @static
+         * @type {string}
+         */
+        CommonSaveManager.WEBSTORAGE_KEY = "RPG Common";
+
         /**
          * 初期化処理。
          * @private
@@ -776,7 +791,7 @@ var utakata = utakata || {};
      * @return {string}
      */
     StorageManager.localFilePathCommonSave = function() {
-        return this.localFileDirectoryPath() + "common.rpgsave";
+        return this.localFileDirectoryPath() + utakata.CommonSaveManager.SAVE_FILENAME;
     };
 
     /**
@@ -787,7 +802,7 @@ var utakata = utakata || {};
      * @return {string}
      */
     StorageManager.webStorageKeyCommonSave = function() {
-        return "RPG Common";
+        return utakata.CommonSaveManager.WEBSTORAGE_KEY;
     };
 
     //-----------------------------------------------------------------------------
