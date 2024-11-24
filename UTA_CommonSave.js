@@ -724,14 +724,20 @@ var utakata = utakata || {};
      * @memberof StorageManager
      * @static
      * @method
+     * @param {boolean} [isBackup=false] バックアップを対象とするか。
      * @return {boolean} 共通セーブデータが存在している場合はtrueを返す。
      */
-    StorageManager.existsCommonSave = function() {
-        if (this.isLocalMode()) {
-            return this.localFileExistsCommonSave();
-        } else {
-            return this.webStorageExistsCommonSave();
+    StorageManager.existsCommonSave = function(isBackup) {
+        if (isBackup === undefined) {
+            isBackup = false;
         }
+        var ret = false;
+        if (this.isLocalMode()) {
+            ret = this.localFileExistsCommonSave(isBackup);
+        } else {
+            ret = this.webStorageExistsCommonSave(isBackup);
+        }
+        return ret;
     };
 
     /**
@@ -739,21 +745,31 @@ var utakata = utakata || {};
      * @memberof StorageManager
      * @static
      * @method
+     * @param {boolean} [isBackup=false] バックアップを対象とするか。
      * @return {boolean} ローカルの共通セーブファイルが存在している場合はtrueを返す。
      */
-    StorageManager.localFileExistsCommonSave = function() {
+    StorageManager.localFileExistsCommonSave = function(isBackup) {
+        if (isBackup === undefined) {
+            isBackup = false;
+        }
+        var filePath = this.localFilePathCommonSave(isBackup);
         var fs = require("fs");
-        return fs.existsSync(this.localFilePathCommonSave());
+        return fs.existsSync(filePath);
     };
 
     /**
      * WebStorage内に共通セーブデータが存在しているかを確認する。
+     * @memberof StorageManager
      * @static
      * @method
+     * @param {boolean} [isBackup=false] バックアップを対象とするか。
      * @return {boolean} WebStorage内に共通セーブデータが存在している場合はtrueを返す。
      */
-    StorageManager.webStorageExistsCommonSave = function() {
-        var key = this.webStorageKeyCommonSave();
+    StorageManager.webStorageExistsCommonSave = function(isBackup) {
+        if (isBackup === undefined) {
+            isBackup = false;
+        }
+        var key = this.webStorageKeyCommonSave(isBackup);
         return !!localStorage.getItem(key);
     };
 
