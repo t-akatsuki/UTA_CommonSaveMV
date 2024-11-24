@@ -763,12 +763,16 @@ var utakata = utakata || {};
      * @memberof StorageManager
      * @static
      * @method
+     * @param {boolean} [isBackup=false] バックアップを対象とするか。
      */
-    StorageManager.removeCommonSave = function() {
+    StorageManager.removeCommonSave = function(isBackup) {
+        if (isBackup === undefined) {
+            isBackup = false;
+        }
         if (this.isLocalMode()) {
-            this.removeLocalFileCommonSave();
+            this.removeLocalFileCommonSave(isBackup);
         } else {
-            this.removeWebStorageCommonSave();
+            this.removeWebStorageCommonSave(isBackup);
         }
     };
 
@@ -777,10 +781,14 @@ var utakata = utakata || {};
      * @memberof StorageManager
      * @static
      * @method
+     * @param {boolean} [isBackup=false] バックアップを対象とするか。
      */
-    StorageManager.removeLocalFileCommonSave = function() {
+    StorageManager.removeLocalFileCommonSave = function(isBackup) {
+        if (isBackup === undefined) {
+            isBackup = false;
+        }
         var fs = require("fs");
-        var filePath = this.localFilePathCommonSave();
+        var filePath = this.localFilePathCommonSave(isBackup);
         if (fs.existsSync(filePath)) {
             fs.unlinkSync(filePath);
         }
