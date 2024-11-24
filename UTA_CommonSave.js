@@ -243,6 +243,20 @@ var utakata = utakata || {};
         CommonSaveManager.WEBSTORAGE_KEY = "RPG Common";
 
         /**
+         * バックアップファイルの拡張子。(local版)
+         * @static
+         * @type {string}
+         */
+        CommonSaveManager.BACKUP_LOCAL_EXT = ".bak";
+
+        /**
+         * バックアップ用WebStorageキーのsuffix。(web版)
+         * @static
+         * @type {string}
+         */
+        CommonSaveManager.BACKUP_WEBSTORAGE_KEY_SUFFIX = ".bak";
+
+        /**
          * 初期化処理。
          * @private
          * @method
@@ -777,9 +791,13 @@ var utakata = utakata || {};
      * @memberof StorageManager
      * @static
      * @method
+     * @param {boolean} [isBackup=false] バックアップを対象とするか。
      */
-    StorageManager.removeWebStorageCommonSave = function() {
-        var key = this.webStorageKeyCommonSave();
+    StorageManager.removeWebStorageCommonSave = function(isBackup) {
+        if (isBackup === undefined) {
+            isBackup = false;
+        }
+        var key = this.webStorageKeyCommonSave(isBackup);
         localStorage.removeItem(key);
     };
 
@@ -788,10 +806,18 @@ var utakata = utakata || {};
      * @memberof StorageManager
      * @static
      * @method
-     * @return {string}
+     * @param {boolean} [isBackup=false] バックアップを対象とするか。
+     * @return {string} 共通セーブデータのファイルパス。
      */
-    StorageManager.localFilePathCommonSave = function() {
-        return this.localFileDirectoryPath() + utakata.CommonSaveManager.SAVE_FILENAME;
+    StorageManager.localFilePathCommonSave = function(isBackup) {
+        if (isBackup === undefined) {
+            isBackup = false;
+        }
+        var targetPath = this.localFileDirectoryPath() + utakata.CommonSaveManager.SAVE_FILENAME;
+        if (isBackup) {
+            targetPath += utakata.CommonSaveManager.BACKUP_LOCAL_EXT;
+        }
+        return targetPath;
     };
 
     /**
@@ -799,10 +825,18 @@ var utakata = utakata || {};
      * @memberof StorageManager
      * @static
      * @method
-     * @return {string}
+     * @param {boolean} [isBackup=false] バックアップを対象とするか。
+     * @return {string} 共通セーブデータのWebStorageキー。
      */
-    StorageManager.webStorageKeyCommonSave = function() {
-        return utakata.CommonSaveManager.WEBSTORAGE_KEY;
+    StorageManager.webStorageKeyCommonSave = function(isBackup) {
+        if (isBackup === undefined) {
+            isBackup = false;
+        }
+        var targetKey = utakata.CommonSaveManager.WEBSTORAGE_KEY;
+        if (isBackup) {
+            targetKey += utakata.CommonSaveManager.BACKUP_WEBSTORAGE_KEY_SUFFIX;
+        }
+        return targetKey;
     };
 
     //-----------------------------------------------------------------------------
