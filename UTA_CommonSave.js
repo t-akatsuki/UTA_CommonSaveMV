@@ -559,6 +559,7 @@ var utakata = utakata || {};
                 return false;
             }
 
+            console.info("Succeeded to recover common save data.");
             return true;
         };
 
