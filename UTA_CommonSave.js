@@ -98,6 +98,18 @@
  *   CommonSave check
  *     Show sharing target switches and variables to console.
  * 
+ * # Information
+ *   Version: 1.30
+ *   License: MIT License
+ *   Web site:
+ *   - Official Web site:
+ *      https://www.utakata-no-yume.net/
+ *   - Plugin page:
+ *      https://www.utakata-no-yume.net/gallery/plugin/tkmv/cmn_save/
+ *   - Contact:
+ *      https://www.utakata-no-yume.net/contact/rpgmvmz/
+ *   - GitHub repository:
+ *      https://github.com/t-akatsuki/UTA_CommonSaveMV
  * 
  * # Change Log
  *   ver 1.20 (2016.05.11)
