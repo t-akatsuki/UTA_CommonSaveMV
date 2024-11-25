@@ -617,15 +617,20 @@ var utakata = utakata || {};
      * @memberof StorageManager
      * @static
      * @method
+     * @param {boolean} [isBackup=false] バックアップを対象とするか。
      * @return {string|null} ロードした共通セーブデータのjson文字列。  
      * ロード対象が存在しない場合はnullを返す。
      */
-    StorageManager.loadCommonSave = function() {
+    StorageManager.loadCommonSave = function(isBackup) {
+        if (isBackup === undefined) {
+            isBackup = false;
+        }
+
         var ret = null;
         if (this.isLocalMode()) {
-            ret = this.loadFromLocalFileCommonSave();
+            ret = this.loadFromLocalFileCommonSave(isBackup);
         } else {
-            ret = this.loadFromWebStorageCommonSave();
+            ret = this.loadFromWebStorageCommonSave(isBackup);
         }
         return ret;
     };
@@ -635,15 +640,19 @@ var utakata = utakata || {};
      * @memberof StorageManager
      * @static
      * @method
+     * @param {boolean} [isBackup=false] バックアップを対象とするか。
      * @return {string|null} ロードした共通セーブデータのjson文字列。  
      * ロード対象が存在しない場合はnullを返す。
      */
-    StorageManager.loadFromLocalFileCommonSave = function() {
-        if (!this.existsCommonSave()) {
+    StorageManager.loadFromLocalFileCommonSave = function(isBackup) {
+        if (isBackup === undefined) {
+            isBackup = false;
+        }
+        if (!this.existsCommonSave(isBackup)) {
             return null;
         }
 
-        var filePath = this.localFilePathCommonSave();
+        var filePath = this.localFilePathCommonSave(isBackup);
         var fs = require("fs");
         var data = fs.readFileSync(filePath, {
             "encoding": "utf8"
@@ -656,15 +665,19 @@ var utakata = utakata || {};
      * @memberof StorageManager
      * @static
      * @method
+     * @param {boolean} [isBackup=false] バックアップを対象とするか。
      * @return {string|null} ロードした共通セーブデータのjson文字列。  
      * ロード対象が存在しない場合はnullを返す。
      */
-    StorageManager.loadFromWebStorageCommonSave = function() {
-        if (!this.existsCommonSave()) {
+    StorageManager.loadFromWebStorageCommonSave = function(isBackup) {
+        if (isBackup === undefined) {
+            isBackup = false;
+        }
+        if (!this.existsCommonSave(isBackup)) {
             return null;
         }
 
-        var key = this.webStorageKeyCommonSave();
+        var key = this.webStorageKeyCommonSave(isBackup);
         var data = localStorage.getItem(key);
         return LZString.decompressFromBase64(data);
     };
