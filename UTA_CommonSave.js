@@ -716,6 +716,55 @@ var utakata = utakata || {};
     };
 
     /**
+     * 共通セーブデータのバックアップを作成する。  
+     * 何かしらの要因で例外が発生した場合、安全で無いバックアップを削除し、例外の送出は行わない。
+     * @memberof StorageManager
+     * @static
+     * @method
+     */
+    StorageManager.backupCommonSave = function() {
+        // 共通セーブデータが存在しない場合は何もしない
+        // 初回の場合にあり得るシナリオ
+        if (!this.existsCommonSave(false)) {
+            return;
+        }
+
+        try {
+            // 既にバックアップファイルが存在している場合は削除する
+            if (this.existsCommonSave(true)) {
+                this.removeCommonSave(true);
+            }
+
+            var data = this.isLocalMode() ? this.loadFromLocalFileCommonSave(false) : this.loadFromWebStorageCommonSave(false);
+            var compressed = LZString.compressToBase64(data);
+
+            // バックアップに書き込み
+            if (this.isLocalMode()) {
+                var dirPath = this.localFileDirectoryPath();
+                var filePath = this.localFilePathCommonSave(true);
+
+                var fs = require("fs");
+                if (!fs.existsSync(dirPath)) {
+                    fs.mkdirSync(dirPath);
+                }
+                fs.writeFileSync(filePath, compressed);
+            } else {
+                var key = this.webStorageKeyCommonSave(true);
+                localStorage.setItem(key, compressed);
+            }
+        } catch (e) {
+            // 元データが破損しているなどでバックアップに失敗した場合は何もしない
+            console.error("Failed to backup common save.");
+            console.error(e);
+
+            // 破損の可能性のあるバックアップを削除する
+            if (this.existsCommonSave(true)) {
+                this.removeCommonSave(true);
+            }
+        }
+    };
+
+    /**
      * 共通セーブデータが存在しているかを確認する。
      * @memberof StorageManager
      * @static
