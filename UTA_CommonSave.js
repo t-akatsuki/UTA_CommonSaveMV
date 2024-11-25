@@ -196,6 +196,19 @@
  *   CommonSave check
  *     共有状態になっているスイッチ・変数番号をコンソールに表示し確認します。
  * 
+ * ■各種情報
+ *   バージョン: 1.30
+ *   ライセンス: MIT License
+ *   Webサイト: 
+ *   - 公式サイト: 
+ *       https://www.utakata-no-yume.net/
+ *   - プラグイン掲載ページ: 
+ *       https://www.utakata-no-yume.net/gallery/plugin/tkmv/cmn_save/
+ *   - お問い合わせ: 
+ *       https://www.utakata-no-yume.net/contact/rpgmvmz/
+ *   - GitHubリポジトリ: 
+ *       https://github.com/t-akatsuki/UTA_CommonSaveMV
+ * 
  * ■更新履歴
  *   ver 1.20 (2016.05.11)
  *     スイッチ・変数の指定の際に「-」を使う事で範囲指定を可能に。
