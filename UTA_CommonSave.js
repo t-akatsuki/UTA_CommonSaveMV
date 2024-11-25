@@ -972,7 +972,6 @@ var utakata = utakata || {};
         return !!localStorage.getItem(key);
     };
 
-    //remove ----------------------------------------------------------------------
     /**
      * 共通セーブデータを削除する。
      * @memberof StorageManager
