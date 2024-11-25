@@ -443,6 +443,32 @@ var utakata = utakata || {};
 
             return true;
         };
+
+        /**
+         * 共通セーブデータのセーブ処理。  
+         * このメソッド内ではバックアップによるリカバリー処理を考慮しない。
+         * @private
+         * @method
+         * @return {boolean} セーブに成功した場合はtrueを返す。
+         */
+        CommonSaveManager.prototype._saveWithoutRescue = function() {
+            try {
+                var data = {
+                    "gameSwitches": this._getTargetSwitchJson(),
+                    "gameVariables": this._getTargetVariableJson()
+                };
+    
+                var jsonStr = JsonEx.stringify(data);
+                StorageManager.saveCommonSave(jsonStr);
+            } catch (e) {
+                console.error("Failed to save common save data.");
+                console.error(e);
+                return false;
+            }
+
+            return true;
+        };
+
         /**
          * 共通セーブデータをバックアップから復元する。  
          * この処理はセーブ時に何らかの問題が発生した時に呼ばれる。  
@@ -507,19 +533,39 @@ var utakata = utakata || {};
         };
 
         /**
-         * プラグインコマンド`CommonSave save`の処理実体。
+         * 共通セーブデータのセーブ処理。  
+         * プラグインコマンド`CommonSave save`の処理実体。  
+         * コアスクリプト側セーブ処理に合わせて、
+         * セーブ失敗時にバックアップによるリカバリー処理を行うように。
          * @method
+         * @return {boolean} セーブに成功した場合trueを返す。
          */
         CommonSaveManager.prototype.save = function() {
-            this._tr("save common save data.");
+            var ret = true;
 
-            var switchesJson = this._getTargetSwitchJson();
-            var variablesJson = this._getTargetVariableJson();
+            try {
+                this._tr("Save common save data.");
 
-            var json = { "gameSwitches": switchesJson, 
-                "gameVariables": variablesJson };
+                // セーブ前にバックアップを取得する
+                // 初回などの場合はバックアップ対象が無いので何もしない
+                StorageManager.backupCommonSave();
+                ret &= this._saveWithoutRescue();
+            } catch (e) {
+                console.error("Failed to save common save. Error occurred.");
+                console.error(e);
+                ret = false;
+            }
 
-            DataManager.saveCommonSave(json);
+            // セーブ処理中に何らかの問題が発生した場合は、
+            // バックカップからのリカバリー処理を試行する
+            if (!ret) {
+                this._rescue();
+            }
+
+            // 不要になったバックアップファイルを削除する
+            StorageManager.removeCommonSave(true);
+
+            return ret;
         };
 
         /**
@@ -643,7 +689,9 @@ var utakata = utakata || {};
     DataManager.saveGame = function(savefileId) {
         var ret = _Data_Manager_saveGame.call(this, savefileId);
 
-        if (utakata.CommonSaveManager.isAuto()) { utakata.CommonSaveManager.save(); }
+        if (utakata.CommonSaveManager.isAuto()) {
+            ret &= utakata.CommonSaveManager.save();
+        }
         return ret;
     };
 
@@ -654,19 +702,6 @@ var utakata = utakata || {};
     };
 
         }
-
-    /**
-     * 共通セーブデータのセーブ処理を実行する。
-     * @memberof DataManager
-     * @static
-     * @method
-     * @param {object} data 共通セーブするデータの連想配列。
-     * @return {boolean} 成功した場合trueを返す。
-     */
-    DataManager.saveCommonSave = function(data) {
-        var jsonStr = JsonEx.stringify(data);
-        StorageManager.saveCommonSave(jsonStr);
-        return true;
     };
 
     //-----------------------------------------------------------------------------
