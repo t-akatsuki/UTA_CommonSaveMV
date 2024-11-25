@@ -372,6 +372,21 @@ var utakata = utakata || {};
         };
 
         /**
+         * 共通セーブデータをメモリ上のスイッチ・変数に展開する。
+         * @private
+         * @method
+         * @param {object} contents ロードした共通セーブデータの連想配列。
+         */
+        CommonSaveManager.prototype._extractContents = function(contents) {
+            if ("gameSwitches" in contents) {
+                this._setLoadSwitches(contents["gameSwitches"]);
+            }
+            if ("gameVariables" in contents) {
+                this._setLoadVariables(contents["gameVariables"]);
+            }
+        };
+
+        /**
          * スイッチデータを現在のメモリ状態に反映する。
          * @private
          * @method
