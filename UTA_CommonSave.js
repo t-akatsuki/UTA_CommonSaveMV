@@ -112,7 +112,12 @@
  *      https://github.com/t-akatsuki/UTA_CommonSaveMV
  * 
  * # Change Log
- *   ver 1.20 (2016.05.11)
+ *   ver 1.30 (Nov 25, 2024)
+ *     Add backup/restore function to match core script save function.
+ *     Add JSDoc comments in code. Enhanced type safety.
+ *     Improved code readability and help document readability.
+ * 
+ *   ver 1.20 (May 11, 2016)
  *     Using "-", the range can be specified.
  *     Add setTrace plugin command.
  *     Add check plugin command.
