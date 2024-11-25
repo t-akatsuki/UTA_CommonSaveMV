@@ -373,10 +373,11 @@ var utakata = utakata || {};
 
         /**
          * スイッチデータを現在のメモリ状態に反映する。
+         * @private
          * @method
          * @param {object} switches ロード対象のスイッチデータ。
          */
-        CommonSaveManager.prototype.setLoadSwitches = function(switches) {
+        CommonSaveManager.prototype._setLoadSwitches = function(switches) {
             for (var key in switches) {
                 var idx = parseInt(key);
                 var value = switches[key];
@@ -386,10 +387,11 @@ var utakata = utakata || {};
 
         /**
          * 変数データを現在のメモリ状態に反映する。
+         * @private
          * @method
          * @param {object} variables ロード対象の変数データ。
          */
-        CommonSaveManager.prototype.setLoadVariables = function(variables) {
+        CommonSaveManager.prototype._setLoadVariables = function(variables) {
             for (var key in variables) {
                 var idx = parseInt(key);
                 var value = variables[key];
