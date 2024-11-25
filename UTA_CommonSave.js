@@ -415,23 +415,62 @@ var utakata = utakata || {};
         };
 
         /**
+         * 共通セーブデータのロード処理。
+         * @private
+         * @method
+         * @return {boolean} ロードに成功した場合はtrueを返す。
+         */
+        CommonSaveManager.prototype._loadWithoutRescue = function() {
+            try {
+                // 共通セーブデータからデータ読み込み
+                var dataRaw = StorageManager.loadCommonSave();
+
+                // ロード対象が存在しなかった場合などは何もしない
+                if (!dataRaw) {
+                    return true;
+                }
+
+                // データを展開しメモリ上に反映
+                var data = JSON.parse(dataRaw);
+                this._extractContents(data);
+            } catch (e) {
+                // 例外が発生した場合はfalseを返す
+                // コアスクリプト側の文脈に従い例外送出は行わない
+                console.error("Failed to load common save data.");
+                console.error(e);
+                return false;
+            }
+
+            return true;
+        };
+        /**
+         * 共通セーブデータのロード処理。  
          * プラグインコマンド`CommonSave load`の処理実体。  
          * 共通セーブデータが存在しない場合は何もしない。
          * @method
+         * @return {boolean} ロード成功した場合trueを返す。
          */
         CommonSaveManager.prototype.load = function() {
-            this._tr("load common save data.");
+            var ret = true;
 
-            if (!this.exists()) { return false; }
+            try {
+                this._tr("Load common save data.");
 
-            var loadData = DataManager.loadCommonSave();
+                // 共通セーブデータが存在していない場合は何もしない
+                // 初回の場合などであり得るシナリオ
+                if (!this.exists()) {
+                    return true;
+                }
 
-            if ("gameSwitches" in loadData) {
-                this.setLoadSwitches(loadData["gameSwitches"]);
+                // ロード処理ではバックアップによるリカバリー処理は無し
+                ret &= this._loadWithoutRescue();
+            } catch (e) {
+                console.error("Failed to load common save data.");
+                console.error(e);
+                return false;
             }
-            if ("gameVariables" in loadData) {
-                this.setLoadVariables(loadData["gameVariables"]);
-            }
+
+            return ret;
         };
 
         /**
@@ -561,7 +600,9 @@ var utakata = utakata || {};
     DataManager.loadGame = function(savefileId) {
         var ret = _Data_Manager_loadGame.call(this, savefileId);
 
-        if (utakata.CommonSaveManager.isAuto()) { utakata.CommonSaveManager.load(); }
+        if (utakata.CommonSaveManager.isAuto()) {
+            ret &= utakata.CommonSaveManager.load();
+        }
         return ret;
     };
 
@@ -579,38 +620,7 @@ var utakata = utakata || {};
         if (utakata.CommonSaveManager.isAuto()) { utakata.CommonSaveManager.load(); }
     };
 
-    /**
-     * 共通セーブデータをロードする。
-     * @memberof DataManager
-     * @static
-     * @method
-     * @return {object} ロードした共通セーブデータの連想配列。  
-     * ロード失敗した場合は空の連想配列を返す。
-     */
-    DataManager.loadCommonSave = function() {
-        var ret = null;
-        var data = null;
-        try {
-            data = StorageManager.loadCommonSave();
-            if (!data) {
-                return {};
-            }
-        } catch (e) {
-            console.error("utakata.CommonSaveManager: Failed to load common save.");
-            console.error(e);
-            return {};
         }
-
-        try {
-            ret = JSON.parse(data);
-        } catch (e) {
-            console.error("utakata.CommonSaveManager: Failed to load common save. Parsing error occurred.");
-            console.error(e);
-            return {};
-        }
-
-        return ret;
-    };
 
     /**
      * 共通セーブデータのセーブ処理を実行する。
