@@ -227,34 +227,30 @@ var utakata = utakata || {};
             this._initialize();
         }
 
-        // class variables
+        // class variables like
         /**
          * セーブファイル名。
-         * @static
          * @type {string}
          */
-        CommonSaveManager.SAVE_FILENAME = "common.rpgsave";
+        CommonSaveManager.prototype.SAVE_FILENAME = "common.rpgsave";
 
         /**
          * 共通セーブのWebStorage用キー名。
-         * @static
          * @type {string}
          */
-        CommonSaveManager.WEBSTORAGE_KEY = "RPG Common";
+        CommonSaveManager.prototype.WEBSTORAGE_KEY = "RPG Common";
 
         /**
          * バックアップファイルの拡張子。(local版)
-         * @static
          * @type {string}
          */
-        CommonSaveManager.BACKUP_LOCAL_EXT = ".bak";
+        CommonSaveManager.prototype.BACKUP_LOCAL_EXT = ".bak";
 
         /**
          * バックアップ用WebStorageキーのsuffix。(web版)
-         * @static
          * @type {string}
          */
-        CommonSaveManager.BACKUP_WEBSTORAGE_KEY_SUFFIX = ".bak";
+        CommonSaveManager.prototype.BACKUP_WEBSTORAGE_KEY_SUFFIX = ".bak";
 
         /**
          * 初期化処理。
