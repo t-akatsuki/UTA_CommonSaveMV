@@ -574,7 +574,7 @@ var utakata = utakata || {};
          * @return {boolean} 共通セーブデータが存在している場合はtrueを返す。
          */
         CommonSaveManager.prototype.exists = function() {
-            this._tr("check exists common save data.");
+            this._tr("Check exists common save data.");
             return StorageManager.existsCommonSave();
         };
 
@@ -584,7 +584,7 @@ var utakata = utakata || {};
          * @method
          */
         CommonSaveManager.prototype.remove = function() {
-            this._tr("remove common save data.");
+            this._tr("Remove common save data.");
             StorageManager.removeCommonSave();
         };
 
