@@ -134,5 +134,6 @@ https://www.utakata-no-yume.net/gallery/plugin/tkmv/
 |:---:|:---|
 | Author | 赤月 智平(T.Akatsuki) |
 | WebSite | https://www.utakata-no-yume.net |
-| Twitter | [@T_Akatsuki](https://twitter.com/t_akatsuki) |
 | GitHub | https://github.com/T-Akatsuki |
+| X | [@T_Akatsuki](https://x.com/t_akatsuki) |
+| Bluesky | [@t-akatsuki.utakata-no-yume.net](https://bsky.app/profile/t-akatsuki.utakata-no-yume.net) |

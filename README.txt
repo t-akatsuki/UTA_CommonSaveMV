@@ -80,9 +80,10 @@ MIT Licenseの全文もしくは全文を掲載したWebページのURLを、ソ
 #------------------------------------------------------------------------------
 # 連絡先
 #------------------------------------------------------------------------------
-+----------+------------------------------------------------+
-| Author   | 赤月 智平(t-akatsuki)                          |
-| WebSite  | https://www.utakata-no-yume.net                |
-| GitHub   | https://github.com/t-akatsuki                  |
-| Twitter  | https://twitter.com/t_akatsuki                 |
-+----------+------------------------------------------------+
++----------+---------------------------------------------------------+
+| Author   | 赤月 智平(t-akatsuki)                                    |
+| WebSite  | https://www.utakata-no-yume.net                         |
+| GitHub   | https://github.com/t-akatsuki                           |
+| X        | https://x.com/t_akatsuki                                |
+| Bluesky  | https://bsky.app/profile/t-akatsuki.utakata-no-yume.net |
++----------+---------------------------------------------------------+
