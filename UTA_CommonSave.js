@@ -11,7 +11,7 @@
 //=============================================================================
 /*:
  * @plugindesc Create a share save data. Share state of game switch and variables between each save data.
- * @author T.Akatsuki
+ * @author t-akatsuki
  * 
  * @param Target Switches
  * @desc Set target switch index number.
@@ -45,10 +45,12 @@
  * @default false
  * 
  * @help # Overview
- * Create a share save data. Share state of game switch and variables between each save data.
+ * Create a share save data. Share state of game switch and variables 
+ * between each save data.
  * If you use plugin command, you can operate common save data at any time.
  * 
- * Common save data will be saved with a name "common.rpgsave" below save directory.
+ * Common save data will be saved with a name "common.rpgsave" 
+ * below save directory.
  * 
  * # Parameters
  *   Target Switches [Switch No, ...]
@@ -69,21 +71,33 @@
  *     Automatically to set save / load common save data on save / load timing.
  * 
  *   Auto on Gameover [true|false]
- *     If auto saving common save data is enabled , it automatically saves common save data on gameover.
+ *     If auto saving common save data is enabled, 
+ *     It automatically saves common save data on gameover.
  * 
  *   Show Trace [true|false]
  *     Set whether the issue a trace for debugging.
  * 
  * # Plugin Command
- *   CommonSave load                  # Read GameSwitches and GameVariables from common save data and apply game data.
- *                                    # This command is used when you want to load common save data at any time.
- *   CommonSave save                  # Save target GameSwitches and GameVariables common save data.
- *                                    # This command is used when you want to save in common save data at any time.
- *   CommonSave remove                # Remove common save data file.
+ *   CommonSave load
+ *     Read GameSwitches and GameVariables from common save data 
+ *     and apply game data.
+ *     This command is used when you want to load common save data 
+ *     at any time.
  * 
- *   CommonSave setTrace [true|false] # Setting to enabled trace on console.
+ *   CommonSave save
+ *     Save target GameSwitches and GameVariables common save data.
+ *     This command is used when you want to save in common save data 
+ *     at any time.
  * 
- *   CommonSave check                 # Show sharing target switches and variables to console.
+ *   CommonSave remove
+ *     Remove common save data file.
+ * 
+ *   CommonSave setTrace [true|false]
+ *     Setting to enabled trace on console.
+ * 
+ *   CommonSave check
+ *     Show sharing target switches and variables to console.
+ * 
  * 
  * # Change Log
  *   ver 1.20 (2016.05.11)
