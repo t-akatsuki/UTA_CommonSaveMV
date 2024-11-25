@@ -698,9 +698,8 @@ var utakata = utakata || {};
     var _Data_Manager_setupNewGame = DataManager.setupNewGame;
     DataManager.setupNewGame = function() {
         _Data_Manager_setupNewGame.call(this);
-        if (utakata.CommonSaveManager.isAuto()) { utakata.CommonSaveManager.load(); }
-    };
-
+        if (utakata.CommonSaveManager.isAuto()) {
+            utakata.CommonSaveManager.load();
         }
     };
 
