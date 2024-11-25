@@ -765,6 +765,53 @@ var utakata = utakata || {};
     };
 
     /**
+     * 共通セーブデータのバックアップレストア処理。  
+     * バックアップが存在しない場合は何もしない。  
+     * 復元中に例外が発生した場合はそのまま例外送出する。
+     * @memberof StorageManager
+     * @static
+     * @method
+     */
+    StorageManager.restoreBackupCommonSave = function() {
+        // バックアップが存在しない場合は何もしない
+        if (!this.existsCommonSave(true)) {
+            console.warn("Restore common save has not processed because common save backup is not found.");
+            return;
+        }
+
+        try {
+            // バックアップファイルからデータを読み込む
+            var data = this.isLocalMode() ? this.loadFromLocalFileCommonSave(true) : this.loadFromWebStorageCommonSave(true);
+            // 対象が存在しない or 空データだった場合は復元しない
+            if (!data) {
+                console.warn("Restore common save has not processed because backup common save data is empty.");
+                return;
+            }
+            var compressed = LZString.compressToBase64(data);
+
+            // 共通セーブデータにバックアップデータを上書きしてバックアップを削除
+            if (this.isLocalMode()) {
+                var dirPath = this.localFileDirectoryPath();
+                var filePath = this.localFilePathCommonSave(false);
+
+                var fs = require("fs");
+                if (!fs.existsSync(dirPath)) {
+                    fs.mkdirSync(dirPath);
+                }
+                fs.writeFileSync(filePath, compressed);
+            } else {
+                var key = this.webStorageKeyCommonSave(false);
+                localStorage.setItem(key, compressed);
+            }
+        } catch (e) {
+            // 復元に失敗した場合は例外
+            console.error("Failed to restore backup common save.");
+            console.error(e);
+            throw e;
+        }
+    };
+
+    /**
      * 共通セーブデータが存在しているかを確認する。
      * @memberof StorageManager
      * @static
