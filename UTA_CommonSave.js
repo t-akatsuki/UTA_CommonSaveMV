@@ -444,6 +444,39 @@ var utakata = utakata || {};
             return true;
         };
         /**
+         * 共通セーブデータをバックアップから復元する。  
+         * この処理はセーブ時に何らかの問題が発生した時に呼ばれる。  
+         * コアスクリプト側のセーブ処理に合わせた形の実装とする。
+         * @private
+         * @method
+         * @return {boolean} 正常にバックアップから復元できた場合/はtrueを返す。  
+         * 復元対象が無く何も行わなかった場合もtrueを返す。
+         */
+        CommonSaveManager.prototype._rescue = function() {
+            this._tr("Rescue common save data.");
+
+            // バックアップが存在していないは何もしない
+            if (!StorageManager.existsCommonSave(true)) {
+                console.warn("Recover common save has not processed because common save backup is not found.");
+                return true;
+            }
+
+            try {
+                // データ破損の疑いがある共通セーブを削除
+                StorageManager.removeCommonSave(false);
+
+                // バックアップから共通セーブデータを復元
+                StorageManager.restoreBackupCommonSave();
+            } catch (e) {
+                console.error("Failed to recover common save data.");
+                console.error(e);
+                return false;
+            }
+
+            return true;
+        };
+
+        /**
          * 共通セーブデータのロード処理。  
          * プラグインコマンド`CommonSave load`の処理実体。  
          * 共通セーブデータが存在しない場合は何もしない。
