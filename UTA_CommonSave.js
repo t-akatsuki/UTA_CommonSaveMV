@@ -106,8 +106,10 @@
  *      https://github.com/t-akatsuki/UTA_CommonSaveMV
  * 
  * # Change Log
- *   ver 1.30 (Nov 25, 2024)
+ *   ver 1.30 (Dec 01, 2024)
  *     Add backup/restore function to match core script save function.
+ *     If common save data corruption is detected during loading, 
+ *     Restore common save data from existing backup.
  *     Add JSDoc comments in code. Enhanced type safety.
  *     Improved code readability and help document readability.
  * 
@@ -235,8 +237,10 @@
  *       https://github.com/t-akatsuki/UTA_CommonSaveMV
  * 
  * ■更新履歴
- *   ver 1.30 (2024.11.25)
+ *   ver 1.30 (2024.12.01)
  *     コアスクリプトセーブ処理に合わせたバックアップ/復旧処理を追加。
+ *     ロード時に共有セーブデータが破損していた場合、
+ *     バックアップがあれば復旧を試みるように。
  *     コード内のJSDocコメント追加。可読性の向上。型安全性の強化。
  *     ヘルプドキュメントの可読性向上。
  * 
