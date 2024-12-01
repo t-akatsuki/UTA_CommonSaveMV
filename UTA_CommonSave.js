@@ -486,11 +486,12 @@ var utakata = utakata || {};
                 var dataRaw = StorageManager.loadCommonSave();
 
                 // ロード対象が存在しなかった場合などは何もしない
-                if (!dataRaw) {
+                if (dataRaw === null) {
                     return true;
                 }
 
                 // データを展開しメモリ上に反映
+                // データが壊れている場合はparseで例外となる
                 var data = JSON.parse(dataRaw);
                 this._extractContents(data);
             } catch (e) {
@@ -531,7 +532,7 @@ var utakata = utakata || {};
 
         /**
          * 共通セーブデータをバックアップから復元する。  
-         * この処理はセーブ時に何らかの問題が発生した時に呼ばれる。  
+         * この処理はセーブ時などに何らかの問題が発生した時に呼ばれる。  
          * コアスクリプト側のセーブ処理に合わせた形の実装とする。
          * @private
          * @method
@@ -582,12 +583,31 @@ var utakata = utakata || {};
                     return true;
                 }
 
-                // ロード処理ではバックアップによるリカバリー処理は無し
                 ret &= this._loadWithoutRescue();
             } catch (e) {
                 console.error("Failed to load common save data.");
                 console.error(e);
-                return false;
+                ret = false;
+            }
+
+            // バックアップが存在する場合は復元後にもう一度ロードを試みる
+            // 本来正常シナリオではバックアップは残存していないはずだが、
+            // バックアップがある場合は復旧を試みる
+            if (!ret && StorageManager.existsCommonSave(true)) {
+                console.warn("Detect common save backup, Try to recover common save data...");
+
+                // バックアップからの復元を行う
+                // 復元後バックアップは破棄する
+                this._rescue();
+                StorageManager.removeCommonSave(true);
+
+                // 再度ロードを試みる
+                ret = this.load();
+                if (ret) {
+                    console.info("Succeeded to recover common save data and loading.");
+                } else {
+                    console.error("Failed to load common save data from backup.");
+                }
             }
 
             return ret;
@@ -812,6 +832,7 @@ var utakata = utakata || {};
         var data = fs.readFileSync(filePath, {
             "encoding": "utf8"
         });
+        // 不正な入力の場合は空文字を返すので注意
         return LZString.decompressFromBase64(data);
     };
 
@@ -834,6 +855,7 @@ var utakata = utakata || {};
 
         var key = this.webStorageKeyCommonSave(isBackup);
         var data = localStorage.getItem(key);
+        // 不正な入力の場合は空文字を返すので注意
         return LZString.decompressFromBase64(data);
     };
 
