@@ -108,6 +108,7 @@ https://www.utakata-no-yume.net/gallery/plugin/tkmv/
 ### ver 1.30 (2024.12.05)
 コアスクリプトセーブ処理に合わせたバックアップ/復旧処理を追加。  
 ロード時に共有セーブデータが破損していた場合、バックアップがあれば復旧を試みるように。  
+共有対象を後から減らした場合、対象外とした対象もロード時に反映してしまう問題の対処。  
 コード内のJSDocコメント追加。可読性の向上。型安全性の強化。  
 ヘルプドキュメントの可読性向上。
 
@@ -133,7 +134,7 @@ https://www.utakata-no-yume.net/gallery/plugin/tkmv/
 
 |  |  |
 |:---:|:---|
-| Author | 赤月 智平(T.Akatsuki) |
+| Author | 赤月 智平(t-akatsuki) |
 | WebSite | https://www.utakata-no-yume.net |
 | GitHub | https://github.com/T-Akatsuki |
 | X | [@T_Akatsuki](https://x.com/t_akatsuki) |
