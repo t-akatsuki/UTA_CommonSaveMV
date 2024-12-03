@@ -53,7 +53,7 @@ MIT Licenseの全文もしくは全文を掲載したWebページのURLを、ソ
 #------------------------------------------------------------------------------
 # 更新履歴
 #------------------------------------------------------------------------------
-・ver 1.30 (2024.12.01)
+・ver 1.30 (2024.12.05)
   コアスクリプトセーブ処理に合わせたバックアップ/復旧処理を追加。
   ロード時に共有セーブデータが破損していた場合、
   バックアップがあれば復旧を試みるように。
@@ -82,10 +82,8 @@ MIT Licenseの全文もしくは全文を掲載したWebページのURLを、ソ
 #------------------------------------------------------------------------------
 # 連絡先
 #------------------------------------------------------------------------------
-+----------+---------------------------------------------------------+
-| Author   | 赤月 智平(t-akatsuki)                                    |
-| WebSite  | https://www.utakata-no-yume.net                         |
-| GitHub   | https://github.com/t-akatsuki                           |
-| X        | https://x.com/t_akatsuki                                |
-| Bluesky  | https://bsky.app/profile/t-akatsuki.utakata-no-yume.net |
-+----------+---------------------------------------------------------+
+Author  : 赤月 智平(t-akatsuki)
+WebSite : https://www.utakata-no-yume.net
+GitHub  : https://github.com/t-akatsuki
+X       : https://x.com/t_akatsuki
+Bluesky : https://bsky.app/profile/t-akatsuki.utakata-no-yume.net
