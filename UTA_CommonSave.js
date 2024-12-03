@@ -106,7 +106,7 @@
  *      https://github.com/t-akatsuki/UTA_CommonSaveMV
  * 
  * # Change Log
- *   ver 1.30 (Dec 01, 2024)
+ *   ver 1.30 (Dec 05, 2024)
  *     Add backup/restore function to match core script save function.
  *     If common save data corruption is detected during loading, 
  *     Restore common save data from existing backup.
@@ -239,7 +239,7 @@
  *       https://github.com/t-akatsuki/UTA_CommonSaveMV
  * 
  * ■更新履歴
- *   ver 1.30 (2024.12.01)
+ *   ver 1.30 (2024.12.05)
  *     コアスクリプトセーブ処理に合わせたバックアップ/復旧処理を追加。
  *     ロード時に共有セーブデータが破損していた場合、
  *     バックアップがあれば復旧を試みるように。
