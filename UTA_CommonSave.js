@@ -110,6 +110,8 @@
  *     Add backup/restore function to match core script save function.
  *     If common save data corruption is detected during loading, 
  *     Restore common save data from existing backup.
+ *     Fix problem if you reduce shared targets, 
+ *     The excluded targets will be loaded when loading.
  *     Add JSDoc comments in code. Enhanced type safety.
  *     Improved code readability and help document readability.
  * 
@@ -241,6 +243,8 @@
  *     コアスクリプトセーブ処理に合わせたバックアップ/復旧処理を追加。
  *     ロード時に共有セーブデータが破損していた場合、
  *     バックアップがあれば復旧を試みるように。
+ *     共有対象を後から減らした場合、対象外とした対象もロード時に
+ *     反映してしまう問題の対処。
  *     コード内のJSDocコメント追加。可読性の向上。型安全性の強化。
  *     ヘルプドキュメントの可読性向上。
  * 
@@ -459,6 +463,12 @@ var utakata = utakata || {};
         CommonSaveManager.prototype._setLoadSwitches = function(switches) {
             for (var key in switches) {
                 var idx = parseInt(key);
+
+                // 共有対象の場合のみ反映する
+                if (this._targetSwitchList.indexOf(idx) < 0) {
+                    continue;
+                }
+
                 var value = switches[key];
                 $gameSwitches.setValue(idx, value);
             }
@@ -473,6 +483,12 @@ var utakata = utakata || {};
         CommonSaveManager.prototype._setLoadVariables = function(variables) {
             for (var key in variables) {
                 var idx = parseInt(key);
+
+                // 共有対象の場合のみ反映する
+                if (this._targetVariableList.indexOf(idx) < 0) {
+                    continue;
+                }
+
                 var value = variables[key];
                 $gameVariables.setValue(idx, value);
             }
