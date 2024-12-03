@@ -614,6 +614,13 @@ var utakata = utakata || {};
                 }
             }
 
+            // バックアップが存在している && 正常に読み込めた場合は
+            // バックアップは既に不要と同義
+            // 事故防止のために削除しておく
+            if (ret && StorageManager.existsCommonSave(true)) {
+                StorageManager.removeCommonSave(true);
+            }
+
             return ret;
         };
 
